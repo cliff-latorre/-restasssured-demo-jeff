@@ -5,7 +5,6 @@ import io.restassured.filter.log.RequestLoggingFilter;
 import io.restassured.filter.log.ResponseLoggingFilter;
 import io.restassured.http.ContentType;
 import org.apache.http.HttpStatus;
-import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
 
