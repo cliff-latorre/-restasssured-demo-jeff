@@ -1,25 +1,18 @@
 import static io.restassured.RestAssured.*;
 
-import io.restassured.RestAssured;
-import io.restassured.filter.log.RequestLoggingFilter;
-import io.restassured.filter.log.ResponseLoggingFilter;
+import Pojos.CreateUserRequest;
+import Pojos.CreateUserResponse;
 import io.restassured.http.ContentType;
 import org.apache.http.HttpStatus;
-import org.junit.Before;
 import org.junit.Test;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 
-public class ReqResTest01 {
+public class ReqResTest01 extends BaseTest{
 
 
-    @Before
-    public void setUp() {
-        baseURI = "https://reqres.in";
-        basePath = "/api";
 
-        RestAssured.filters(new RequestLoggingFilter(), new ResponseLoggingFilter());
-    }
 
     @Test
     public void getAllUsersTest() {
@@ -79,5 +72,23 @@ public class ReqResTest01 {
                 .then()
                 .statusCode(HttpStatus.SC_NO_CONTENT);
 
+    }
+
+
+    @Test
+    public void registerUserWithPojoTest() {
+        CreateUserRequest user = new CreateUserRequest();
+        user.setEmail("eve.holt@reqres.in");
+        user.setPassword("pistol");
+        CreateUserResponse userResponse = given()
+                .contentType(ContentType.JSON)
+                .body(user)
+                .post("register")
+                .then()
+                .statusCode(HttpStatus.SC_OK)
+        .extract().body().as(CreateUserResponse.class);
+
+        assertThat(userResponse.getId(), equalTo(4));
+        assertThat(userResponse.getToken(), equalTo("QpwL5tke4Pnpja7X4"));
     }
 }
