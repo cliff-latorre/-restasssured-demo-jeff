@@ -1,3 +1,4 @@
+import io.qameta.allure.restassured.AllureRestAssured;
 import io.restassured.RestAssured;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.builder.ResponseSpecBuilder;
@@ -10,7 +11,7 @@ import io.restassured.specification.ResponseSpecification;
 import org.apache.http.HttpStatus;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.junit.BeforeClass;
+import org.junit.jupiter.api.BeforeAll;
 
 
 import java.util.ArrayList;
@@ -20,7 +21,7 @@ public class BaseTest {
 
     private static final Logger logger = LogManager.getLogger(BaseTest.class);
 
-    @BeforeClass
+    @BeforeAll
     public static void setUp() {
         logger.info("Iniciando la configuracion");
         RestAssured.requestSpecification = defaultRequestSpecification();
@@ -29,9 +30,10 @@ public class BaseTest {
 
     public static RequestSpecification defaultRequestSpecification() {
 
-        List<Filter> filters = new ArrayList<>();
+        List<Filter> filters = new ArrayList<Filter>();
         filters.add(new RequestLoggingFilter());
         filters.add(new ResponseLoggingFilter());
+        filters.add(new AllureRestAssured());
 
         return new RequestSpecBuilder()
                 .setBaseUri(ConfVariables.getHost())
