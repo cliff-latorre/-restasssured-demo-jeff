@@ -2,6 +2,7 @@ import static io.restassured.RestAssured.*;
 
 import Pojos.CreateUserRequest;
 import Pojos.CreateUserResponse;
+
 import io.restassured.http.ContentType;
 import org.apache.http.HttpStatus;
 import org.junit.jupiter.api.Test;
@@ -9,18 +10,23 @@ import org.junit.jupiter.api.Test;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 
+import io.restassured.module.jsv.JsonSchemaValidator;
+
+import java.io.File;
+
 public class ReqResTest extends BaseTest{
-
-
 
 
     @Test
     public void getAllUsersTest() {
+
         given()
                 .contentType(ContentType.JSON)
                 .get("users?page=2")
                 .then()
-                .statusCode(200);
+                .statusCode(200).assertThat()
+                .body(JsonSchemaValidator.
+                        matchesJsonSchema(new File("/Users/cliff.latorre/Documents/PP/restasssured-demo-jeff/src/test/resources/exampleSchema.json")));
     }
 
     @Test
@@ -61,7 +67,6 @@ public class ReqResTest extends BaseTest{
                 .then()
                 .statusCode(HttpStatus.SC_OK)
                 .body("token", notNullValue());
-
     }
 
     @Test
@@ -71,7 +76,6 @@ public class ReqResTest extends BaseTest{
                 .delete("users/12")
                 .then()
                 .statusCode(HttpStatus.SC_NO_CONTENT);
-
     }
 
 
